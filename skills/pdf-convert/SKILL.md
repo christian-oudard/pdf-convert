@@ -44,12 +44,19 @@ section. Export `FIRST` and `LAST` to the script below to convert a range.
 $ bash <skill_dir>/prepare.sh <pdf> <output-dir> [pages-per-batch]
 ```
 
-Eight pages per batch for a born-digital PDF, three for a scan. Batches run
-concurrently, so wall-clock is set by the slowest batch, not the total: one
-page per batch finishes a scan about 40% sooner for roughly twice the tokens,
-which is the lever to pull when someone is waiting. On a long document it
-renders for a while — do not pipe it through `head`, which kills it
-with SIGPIPE partway.
+Eight pages per batch. Most of a batch's cost is starting the subagent — about
+49,000 tokens against 22,000 for a page of scan — so fewer, larger batches are
+markedly cheaper. Six pages of a scan in one batch cost $0.73 where six batches
+of one cost $2.04, for the same output.
+
+Batches run concurrently, so a smaller batch buys wall-clock: the same six pages
+took 19 minutes as one batch and 8 minutes as six. Splitting is the lever when
+someone is waiting, and an expensive one — the last step costs three times as
+much per minute saved as the first. Go larger until the output token limit
+binds, which on dense pages is around eight.
+
+On a long document preparation renders for a while — do not pipe it through
+`head`, which kills it with SIGPIPE partway.
 
 It prints what everything below needs, so keep its output:
 
