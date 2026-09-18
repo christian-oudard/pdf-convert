@@ -1,0 +1,12 @@
+{
+  "name": "pdf-conversion",
+  "description": "Convert a scanned or digital PDF into clean, structured markdown",
+  "version": "0.2.0",
+  "skills": [
+    {
+      "name": "pdf-convert",
+      "description": "Convert a PDF to clean markdown, keeping maths, tables and figures",
+      "path": "skills/pdf-convert/SKILL.md"
+    }
+  ]
+}
