@@ -9,6 +9,13 @@
 # rewrites everything identically.
 set -u
 
+if [ $# -lt 2 ]; then
+  echo "usage: prepare.sh <pdf> <output-dir> [pages-per-batch]" >&2; exit 2
+fi
+[ -r "$1" ] || { echo "prepare.sh: cannot read $1" >&2; exit 2; }
+command -v pdfinfo >/dev/null 2>&1 ||
+  { echo "prepare.sh: poppler is not installed" >&2; exit 2; }
+
 PDF=$(realpath "$1"); OUT="$2"; BATCH="${3:-8}"
 NAME=$(basename "$PDF" .pdf); WORK=/tmp/pdf-convert/$NAME
 mkdir -p "$WORK"

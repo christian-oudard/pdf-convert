@@ -40,10 +40,12 @@ magnifies pixels already too coarse to read: nothing gets clearer and you will
 want to look again, at a minute a time. Check yourself — a crop as wide as the
 image you were handed is a crop of that image, not a re-render.
 
-**Look once per region, then move on.** If it is still unreadable, write `[?]`
-and carry on. Expect about one re-render per page; needing many more means the
-scan is too poor to transcribe confidently, which is worth saying in your reply
-rather than grinding at it.
+**Re-render a given spot at most twice.** If a second look does not settle it, a
+third will not either — the detail is not in the file. Widen the crop to catch
+the surrounding context, or write `[?]` and carry on.
+
+Re-render as many *different* places as the page needs; that is what the tool
+is for. The waste is returning to the same glyph over and over.
 
 ## Always
 
