@@ -198,9 +198,6 @@ carries the diagram, so check it against the PDF if the user doubts it.
 
 ## What NOT to do
 
-- **Do not let subagents return markdown through your context.** Files, paths.
-- **Do not trust a scan's OCR text layer.** Having words is not having the
-  right ones.
 - **Do not use haiku on a document with maths.** Measured 96.7% — worse than no
   review at all, because it mangles equations.
 - **Do not change `conversion-prompt.md` casually.** A plausible-looking edit
@@ -209,5 +206,4 @@ carries the diagram, so check it against the PDF if the user doubts it.
   document you know and compare, before and after.
 - **Do not pipe a long-running command through `head` or `tail`.** SIGPIPE
   kills it early.
-- Don't hand-edit the output, and don't split a small document into page
-  ranges — the batching handles it.
+- **Do not split a small document into page ranges** — the batching handles it.
