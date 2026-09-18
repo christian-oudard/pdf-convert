@@ -115,4 +115,9 @@ Write the markdown to the file you were given and put nothing else in it — no
 code fences around the whole document, no wrapper tags like `<output>` or
 `<content>`. It is concatenated with the other batches exactly as you leave it.
 
+**Write the whole file in one operation.** Compose all your pages, then write
+once. Building it up page by page, or going back to edit what you already
+wrote, re-sends the entire conversation each time and is most of what a batch
+costs.
+
 Do not write a summary of what you changed.
