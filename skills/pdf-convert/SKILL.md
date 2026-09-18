@@ -44,8 +44,11 @@ section. Export `FIRST` and `LAST` to the script below to convert a range.
 $ bash <skill_dir>/prepare.sh <pdf> <output-dir> [pages-per-batch]
 ```
 
-Eight pages per batch for a born-digital PDF, three for a scan. The script
-prints what everything below needs, so keep its output:
+Eight pages per batch for a born-digital PDF, three for a scan. On a long
+document it renders for a while — do not pipe it through `head`, which kills it
+with SIGPIPE partway.
+
+It prints what everything below needs, so keep its output:
 
 - `PDF`, `OUT`, `WORK` — paths to paste into prompts
 - `pages … scanned … imaged` — how it read the document. **Nearly all pages
@@ -195,15 +198,3 @@ without a `> *Figure N described:*` blockquote — a caption alone is a defect.
 
 The images are deliberately absent; do not try to restore them. The description
 carries the diagram, so check it against the PDF if the user doubts it.
-
-## What NOT to do
-
-- **Do not use haiku on a document with maths.** Measured 96.7% — worse than no
-  review at all, because it mangles equations.
-- **Do not change `conversion-prompt.md` casually.** A plausible-looking edit
-  has made the output worse more than once, and the damage is usually mangled
-  markup rather than missing text, so it reads perfectly well. Convert a
-  document you know and compare, before and after.
-- **Do not pipe a long-running command through `head` or `tail`.** SIGPIPE
-  kills it early.
-- **Do not split a small document into page ranges** — the batching handles it.
