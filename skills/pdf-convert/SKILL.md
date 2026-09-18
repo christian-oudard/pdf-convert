@@ -44,8 +44,11 @@ section. Export `FIRST` and `LAST` to the script below to convert a range.
 $ bash <skill_dir>/prepare.sh <pdf> <output-dir> [pages-per-batch]
 ```
 
-Eight pages per batch for a born-digital PDF, three for a scan. On a long
-document it renders for a while — do not pipe it through `head`, which kills it
+Eight pages per batch for a born-digital PDF, three for a scan. Batches run
+concurrently, so wall-clock is set by the slowest batch, not the total: one
+page per batch finishes a scan about 40% sooner for roughly twice the tokens,
+which is the lever to pull when someone is waiting. On a long document it
+renders for a while — do not pipe it through `head`, which kills it
 with SIGPIPE partway.
 
 It prints what everything below needs, so keep its output:
