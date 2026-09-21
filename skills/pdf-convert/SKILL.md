@@ -44,11 +44,10 @@ section. Export `FIRST` and `LAST` to the script below to convert a range.
 $ bash <skill_dir>/prepare.sh <pdf> <output-dir> [pages-per-batch]
 ```
 
-Six to eight pages per batch. Below about three, the fixed reads stop
-amortizing and cost per page climbs; above it, the larger context cancels the
-saving from fewer turns. Measured, a scanned page costs the same at three pages
-per batch as at six, and born-digital pages vary by less than a fifth across
-six and seven. Batch size is not worth tuning.
+Six pages per batch. Cost per page falls as the fixed reads amortize and rises
+as the context grows, so there is a shallow minimum around four to six; three
+and eight are both within a few percent, one page or twenty are half as
+efficient again. Anywhere in that basin is fine, so do not tune it.
 
 What does matter is that a subagent's context is cumulative: every tool call
 re-reads everything it has already loaded, so a call made late, when the images
