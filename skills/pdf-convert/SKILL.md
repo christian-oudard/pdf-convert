@@ -44,16 +44,16 @@ section. Export `FIRST` and `LAST` to the script below to convert a range.
 $ bash <skill_dir>/prepare.sh <pdf> <output-dir> [pages-per-batch]
 ```
 
-Eight pages per batch. Most of a batch's cost is starting the subagent — about
-49,000 tokens against 22,000 for a page of scan — so fewer, larger batches are
-markedly cheaper. Six pages of a scan in one batch cost $0.73 where six batches
-of one cost $2.04, for the same output.
+Six to eight pages per batch. Below about three, the fixed reads stop
+amortizing and cost per page climbs; above it, the larger context cancels the
+saving from fewer turns. Measured, a scanned page costs the same at three pages
+per batch as at six, and born-digital pages vary by less than a fifth across
+six and seven. Batch size is not worth tuning.
 
-Batches run concurrently, so a smaller batch buys wall-clock: the same six pages
-took 19 minutes as one batch and 8 minutes as six. Splitting is the lever when
-someone is waiting, and an expensive one — the last step costs three times as
-much per minute saved as the first. Go larger until the output token limit
-binds, which on dense pages is around eight.
+What does matter is that a subagent's context is cumulative: every tool call
+re-reads everything it has already loaded, so a call made late, when the images
+are all in context, costs many times one made early. Cost is turns multiplied
+by context, and both grow as a batch runs.
 
 On a long document preparation renders for a while — do not pipe it through
 `head`, which kills it with SIGPIPE partway.
@@ -99,16 +99,24 @@ Page images — read these all together in one step:
 Pages <the "no image" list> have no image because they are running prose with
 no equations or tables. Use their reference text as it stands.
 
-Source PDF, if you need to re-render part of a page larger to settle an
-ambiguous symbol: <PDF>
-At 400 DPI a page of this PDF is <zoom> pixels; the crop box is in those.
-
 Write the finished markdown for all <n> pages to <WORK>/md_<start>-<end>.md
 Reply with only that path and nothing else.
 ```
 
-For an all-scan document, drop the reference-text line and say the images are
-the only source.
+**Only for a scan**, add the two lines that let a subagent look closer, and drop
+the reference-text line in favour of saying the images are the only source:
+
+```
+Source PDF, if you need to re-render part of a page larger to settle an
+ambiguous symbol: <PDF>
+At 400 DPI a page of this PDF is <zoom> pixels; the crop box is in those.
+```
+
+Never give those to a born-digital batch. Its characters are already exact from
+the text layer, so re-rendering cannot tell it anything — but offered the
+option, a subagent takes it, and each attempt runs against a context already
+holding every page image. One batch that did this cost $0.60 a page against
+$0.22 for the batches that did not.
 
 **Spawn a batch only if its output is missing**, so an interrupted run resumes
 rather than paying twice:
