@@ -22,7 +22,28 @@ Debian, Ubuntu and nixpkgs, `poppler` on Homebrew, Arch and Alpine. Everything
 else is POSIX shell, with no GNU-only flags, so it runs on macOS and BSD too.
 Keep it that way.
 
-## 1. Decide where the output goes
+## 1. Look for a better source than the PDF
+
+A PDF is a rendering. Where the thing it was rendered from is available, take
+that instead and skip this method entirely — no page images, no transcription,
+nothing to verify.
+
+- **arXiv**: the authors' LaTeX source is published alongside the paper at
+  `https://export.arxiv.org/e-print/<id>`, and `arxiv.org/html/<id>` is a
+  LaTeXML rendering of it — real HTML tables, equations as markup, figures as
+  files with captions. Either beats converting the PDF.
+- **PubMed Central**: full text is available as structured XML through the NCBI
+  E-utilities. Note the HTML rendering shows equations as images, so prefer the
+  XML or the PDF over scraping the page.
+- **Publisher sites** — Nature, RSC, Elsevier and the like — block automated
+  fetching, redirecting to an identity provider or returning 403. There the PDF
+  the user already has is the only source, so convert it.
+
+Check for supplementary material too. On many papers the methods and the larger
+tables live in a separate SI PDF, and converting only the main text quietly
+loses them.
+
+## 2. Decide where the output goes
 
 There is no configured directory and no default. Choose from what the
 conversion is for:
@@ -38,7 +59,7 @@ Never invent a library directory, and never move or copy the source PDF.
 Ask about a page range on a large document (100+ pages); the user may want one
 section. Export `FIRST` and `LAST` to the script below to convert a range.
 
-## 2. Prepare
+## 3. Prepare
 
 ```bash
 $ bash <skill_dir>/prepare.sh <pdf> <output-dir> [pages-per-batch]
@@ -78,7 +99,7 @@ freely; it takes seconds and rewrites everything identically.
 **Shell variables do not survive between tool calls**, which is why this is one
 script and why what follows reads paths from files rather than variables.
 
-## 3. Convert the batches in parallel
+## 4. Convert the batches in parallel
 
 One subagent per batch, all spawned in a single message, on **sonnet**. Each
 must **write its markdown to a file and reply with only the path** — if batch
@@ -132,7 +153,7 @@ Preparation costs seconds and rebuilds `batches.txt` identically, so resuming
 in a later session is free — only the `md_` files are paid work. Re-run one bad
 batch by deleting its file and spawning it alone. Never hand-edit the markdown.
 
-## 4. Assemble
+## 5. Assemble
 
 ```bash
 $ : > "$OUT/$NAME.md"
@@ -141,10 +162,10 @@ $ while read -r r; do
   done < "$WORK/batches.txt"
 ```
 
-## 5. Mend the seams
+## 6. Mend the seams
 
 Subagents never see each other's pages, so the joins carry this design's own
-defects — and step 6 cannot see them, because nothing is missing.
+defects — and step 7 cannot see them, because nothing is missing.
 
 ```bash
 $ grep -n -e '</\?output>' -e '</\?content>' -e '^```$' "$OUT/$NAME.md"
@@ -161,9 +182,9 @@ against the first page of the next, and fix only:
   next.
 
 Do not have a subagent rewrite the whole document to repair a few joins. Re-run
-step 6 afterwards; coverage should not move.
+step 7 afterwards; coverage should not move.
 
-## 6. Verify
+## 7. Verify
 
 Two checks against the PDF's own text layer. This is what catches a dropped
 table cell that reads perfectly well in isolation.
@@ -209,7 +230,7 @@ exists, diff against it**: two readings disagree where the source is hard to
 read, which is the strongest check available on a scan. Settle each
 disagreement against the page at 400 DPI, not by preferring a version.
 
-## 7. Report
+## 8. Report
 
 Say where the file is. Read the first few pages and flag maths not wrapped in
 `$...$`, leftover page numbers or running headers, and any figure caption left
