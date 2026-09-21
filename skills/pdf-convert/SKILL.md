@@ -44,10 +44,12 @@ section. Export `FIRST` and `LAST` to the script below to convert a range.
 $ bash <skill_dir>/prepare.sh <pdf> <output-dir> [pages-per-batch]
 ```
 
-Six pages per batch. Cost per page falls as the fixed reads amortize and rises
-as the context grows, so there is a shallow minimum around four to six; three
-and eight are both within a few percent, one page or twenty are half as
-efficient again. Anywhere in that basin is fine, so do not tune it.
+Four pages per batch, which is the script's default. Cost per page falls as the
+fixed reads amortize and rises as the context grows, giving a shallow minimum
+near four; three and eight are both within a few percent, while one page or
+twenty are half as efficient again. Four sits at the bottom of that basin and
+makes more batches, which run concurrently, so it is the quickest too. Do not
+tune it further.
 
 What does matter is that a subagent's context is cumulative: every tool call
 re-reads everything it has already loaded, so a call made late, when the images

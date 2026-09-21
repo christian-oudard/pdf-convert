@@ -16,7 +16,7 @@ fi
 command -v pdfinfo >/dev/null 2>&1 ||
   { echo "prepare.sh: poppler is not installed" >&2; exit 2; }
 
-PDF=$(realpath "$1"); OUT="$2"; BATCH="${3:-8}"
+PDF=$(realpath "$1"); OUT="$2"; BATCH="${3:-4}"
 NAME=$(basename "$PDF" .pdf); WORK=/tmp/pdf-convert/$NAME
 mkdir -p "$WORK"
 
